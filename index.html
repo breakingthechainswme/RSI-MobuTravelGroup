@@ -323,8 +323,9 @@
   </div>
 
   <div id="platinum-hero-title" style="display:none;text-align:center;margin-top:26px;">
-    <div style="font-family:'Fraunces',serif;font-size:46px;font-weight:700;color:#fff;letter-spacing:0.05em;">PLATINUM</div>
-    <div style="display:inline-block;margin-top:8px;background:var(--gold);color:#123;font-weight:700;font-size:12.5px;letter-spacing:0.08em;padding:5px 16px;border-radius:999px;">1ST OPPORTUNITY</div>
+    <div style="font-family:'Fraunces',serif;font-size:60px;font-weight:700;color:#fff;letter-spacing:0.05em;line-height:1.05;">PLATINUM</div>
+    <div style="font-family:'Fraunces',serif;font-size:60px;font-weight:700;color:#fff;letter-spacing:0.05em;line-height:1.05;">LICENSE</div>
+    <div style="display:inline-block;margin-top:10px;background:#8DC63F;color:#123;font-weight:700;font-size:12.5px;letter-spacing:0.08em;padding:5px 16px;border-radius:999px;">1ST OPPORTUNITY</div>
   </div>
 </div>
 
@@ -351,7 +352,7 @@
     </div>
 
     <div class="card" id="base-price-card">
-      <div class="card-title">Base Package Price</div>
+      <div class="card-title">Base License Price</div>
       <div id="strike-price" style="display:none;font-size:15px;color:rgba(255,255,255,0.45);text-decoration:line-through;">$12,995</div>
       <div class="price-hero">
         <span class="currency">$</span>
@@ -383,12 +384,13 @@
         <div class="row-label">
           <div>
             <div class="name">Number of passes</div>
-            <div class="desc">Multiplies the value above</div>
+            <div class="desc">2+ shows a promo label on the Client Display</div>
           </div>
         </div>
-        <div class="row-value">
+        <div class="row-value" style="gap:8px;">
           <span class="currency">&times;</span>
-          <input type="number" id="family-qty" value="1" min="0" step="1" oninput="calculate()">
+          <input type="number" id="family-qty" value="4" min="0" step="1" oninput="calculate()" style="width:56px;">
+          <input type="text" id="promo-label" placeholder="e.g. September" oninput="calculate()" style="width:120px;text-align:right;border:1px solid var(--line);border-radius:6px;padding:5px 7px;font-family:'Inter',sans-serif;font-weight:600;font-size:13px;color:var(--teal-deep);">
         </div>
       </div>
       <div class="row" style="border-top:1px dashed var(--line);padding-top:11px;">
@@ -445,11 +447,11 @@
     <div class="summary">
       <h2 id="summary-heading">Today's Offer</h2>
 
-      <div class="sum-line"><span id="sum-pkg-label">Standard package</span><span id="sum-pkg-price">$12,995</span></div>
+      <div class="sum-line"><span id="sum-pkg-label">Anytime Standard</span><span id="sum-pkg-price">$12,995</span></div>
       <div class="sum-line neg" id="sum-marketing-line" style="display:none;"><span>Marketing funds credit</span><span id="sum-marketing-val">&minus;$1,000</span></div>
       <div class="sum-line neg" id="sum-weeks-line" style="display:none;"><span id="sum-weeks-label">Premium weeks removed</span><span id="sum-weeks-val">$0</span></div>
       <div class="sum-line neg" id="sum-family-line" style="display:none;"><span id="sum-family-label">Family licenses removed</span><span id="sum-family-val">$0</span></div>
-      <div class="sum-line strong"><span>Adjusted package price</span><span id="sum-adjusted">$12,995</span></div>
+      <div class="sum-line strong"><span>Adjusted License Price</span><span id="sum-adjusted">$12,995</span></div>
       <div class="sum-line"><span>Documentation fee</span><span id="sum-doc">$599</span></div>
 
       <div class="sum-total">
@@ -475,40 +477,77 @@ const CLIENT_DISPLAY_HTML = `<!DOCTYPE html><html><head><meta charset="UTF-8">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;}
-  body{margin:0;background:linear-gradient(135deg,#1B2A63,#0676BE);color:#fff;font-family:'Inter',sans-serif;min-height:100vh;padding:36px 28px;}
-  .wrap{max-width:460px;margin:0 auto;}
-  .brand{margin-bottom:26px;}
-  .brand img{height:40px;width:auto;background:#fff;padding:6px 10px;border-radius:8px;}
-  h1{font-family:'Fraunces',serif;font-size:22px;margin:0 0 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-  .badge{display:inline-block;background:#F7EBD0;color:#7A5B12;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;}
-  .card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:24px;}
-  .strike{font-size:15px;color:rgba(255,255,255,0.55);text-decoration:line-through;margin-bottom:2px;}
-  .line{display:flex;justify-content:space-between;font-size:14px;padding:7px 0;color:rgba(255,255,255,0.85);}
-  .line.neg{color:#FFC9BA;}
-  .line.strong{font-weight:600;color:#fff;border-top:1px solid rgba(255,255,255,0.2);margin-top:6px;padding-top:12px;font-size:15px;}
-  .total-wrap{margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.25);}
-  .total-label{font-size:12px;color:rgba(255,255,255,0.65);letter-spacing:.03em;}
-  .total-amount{font-family:'Fraunces',serif;font-size:42px;font-weight:600;color:#D9A544;margin-top:2px;}
-  .renewal{margin-top:14px;font-size:12.5px;color:rgba(255,255,255,0.7);}
+  body{margin:0;background:#000;color:#fff;font-family:'Inter',sans-serif;min-height:100vh;padding:40px 28px;}
+  .wrap{max-width:500px;margin:0 auto;}
+  .brand{margin-bottom:30px;text-align:center;}
+  .brand img{height:130px;width:auto;background:#fff;padding:14px 22px;border-radius:14px;}
+  .pkg-heading{font-family:'Fraunces',serif;font-size:26px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;text-align:center;}
+  .badge{display:inline-block;background:#EAF6DA;color:#3F6018;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;margin-top:8px;}
+  .badge-wrap{text-align:center;margin-bottom:6px;}
+  .card{background:#0A0A0A;border:1px solid rgba(255,255,255,0.14);border-radius:14px;padding:28px 26px;}
+  .strike{font-size:17px;color:rgba(255,255,255,0.45);text-decoration:line-through;text-align:center;margin-top:14px;}
+  .total-amount{font-family:'Fraunces',serif;font-size:52px;font-weight:600;color:#D9A544;margin-top:4px;text-align:center;}
+  .features{list-style:none;margin:22px 0 0;padding:0;border-top:1px solid rgba(255,255,255,0.14);font-size:14.5px;}
+  .features li{padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.1);}
+  .features li:last-child{border-bottom:none;}
+  .features .g{color:#D9A544;font-weight:600;}
+  .features .b{color:#0676BE;font-weight:600;}
+  .renewal{margin-top:18px;font-size:12.5px;color:rgba(255,255,255,0.65);text-align:center;}
+  .grand-total{margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.2);text-align:center;}
+  .grand-total .label{font-size:12px;color:rgba(255,255,255,0.6);letter-spacing:0.03em;}
+  .grand-total .amount{font-family:'Fraunces',serif;font-size:32px;font-weight:600;color:#D9A544;margin-top:2px;}
+  .savings-toggle-wrap{text-align:center;margin-top:12px;}
+  .savings-toggle{
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.3);
+    color:rgba(255,255,255,0.8);
+    font-family:'Inter',sans-serif;
+    font-size:11.5px;
+    font-weight:600;
+    letter-spacing:0.03em;
+    padding:6px 16px;
+    border-radius:999px;
+    cursor:pointer;
+  }
+  .savings-toggle:hover{background:rgba(255,255,255,0.08);}
+  .savings-details{
+    margin-top:10px;
+    padding:14px 16px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:10px;
+  }
+  .saving-line{display:flex;justify-content:space-between;font-size:13px;color:#FFC9BA;padding:5px 0;}
 </style></head>
 <body><div class="wrap">
   <div class="brand"><img src="${LOGO_DATA_URI}" alt="RSI Vacations"></div>
-  <h1><span id="cd-pkg-label">Standard package</span><span id="cd-today-badge" class="badge" style="display:none;">1ST OPPORTUNITY</span></h1>
   <div class="card">
+    <div class="pkg-heading" id="cd-pkg-label">Anytime Standard</div>
+    <div class="badge-wrap"><span id="cd-today-badge" class="badge" style="display:none;">1ST OPPORTUNITY</span></div>
     <div id="cd-strike-price" class="strike" style="display:none;"></div>
-    <div class="line strong"><span>Package price</span><span id="cd-base-price">$12,995</span></div>
-    <div class="line neg" id="cd-marketing-line" style="display:none;"><span>Marketing funds credit</span><span id="cd-marketing-val"></span></div>
-    <div class="line neg" id="cd-weeks-line" style="display:none;"><span id="cd-weeks-label"></span><span id="cd-weeks-val"></span></div>
-    <div class="line neg" id="cd-family-line" style="display:none;"><span id="cd-family-label"></span><span id="cd-family-val"></span></div>
-    <div class="line strong"><span>Adjusted price</span><span id="cd-adjusted"></span></div>
-    <div class="line"><span>Documentation fee</span><span id="cd-doc"></span></div>
-    <div class="total-wrap">
-      <div class="total-label">TOTAL DUE TODAY</div>
-      <div class="total-amount" id="cd-total"></div>
+    <div class="total-amount" id="cd-total"></div>
+    <div class="savings-toggle-wrap">
+      <button id="cd-savings-toggle" class="savings-toggle" onclick="toggleSavings()" style="display:none;">View Savings Breakdown &#9662;</button>
     </div>
+    <div id="cd-savings-details" class="savings-details" style="display:none;"></div>
+    <ul class="features" id="cd-features"></ul>
     <div class="renewal">Annual renewal: <strong id="cd-renewal" style="color:#fff;"></strong></div>
+    <div class="grand-total">
+      <div class="label">TOTAL DUE TODAY (INCL. FEES)</div>
+      <div class="amount" id="cd-grand-total"></div>
+    </div>
   </div>
-</div></body></html>`;
+</div>
+<script>
+function toggleSavings(){
+  var details = document.getElementById('cd-savings-details');
+  var btn = document.getElementById('cd-savings-toggle');
+  var isOpen = details.style.display === 'block';
+  details.style.display = isOpen ? 'none' : 'block';
+  btn.innerHTML = isOpen ? 'View Savings Breakdown &#9662;' : 'Hide Savings Breakdown &#9652;';
+}
+<\/script>
+</body></html>`;
 
 let clientWin = null;
 
@@ -528,6 +567,56 @@ function openClientDisplay(){
   updateClientDisplay();
 }
 
+function buildFeatureLines(){
+  const includedWeeks = weeksByPackage[currentPackage].filter(w => w.included).length;
+  const familyIncluded = document.getElementById('family-include').checked;
+  const familyQty = parseFloat(document.getElementById('family-qty').value) || 0;
+  const promoLabel = (document.getElementById('promo-label').value || 'Promotional').trim();
+  const marketingChecked = PACKAGES[currentPackage].today && document.getElementById('marketing-discount').checked;
+  const marketingAmount = parseFloat(document.getElementById('marketing-amount').value) || 0;
+  const lines = [];
+
+  if(currentPackage === 'standard'){
+    lines.push('$599 Processing/Admin');
+    if(includedWeeks > 0){
+      lines.push(`<span class="g">${includedWeeks} Premier Condo Week${includedWeeks === 1 ? '' : 's'}</span>`);
+    }
+    lines.push('10 Year Membership');
+    lines.push('Non-Transferable');
+    lines.push('Annual Fee <span class="g">$299</span>');
+    lines.push('VIP Benefits');
+    lines.push('Not Included');
+  } else {
+    lines.push('$599 Processing');
+    if(includedWeeks > 0){
+      lines.push(`<span class="g">${includedWeeks} Premier Condo Week${includedWeeks === 1 ? '' : 's'}</span>`);
+    }
+    lines.push('<span class="g">Unlimited</span> Condo Getaways');
+    lines.push('<span class="g">Lifetime</span> License');
+    lines.push('Transferable (w/1st transfer)');
+    if(!familyIncluded || familyQty <= 0){
+      lines.push('<span class="g">0 Family Licenses</span>');
+    } else {
+      const diff = familyQty - 1;
+      if(diff > 0){
+        lines.push(`1 Family License &mdash; <span class="b">${diff} Additional License${diff === 1 ? '' : 's'} ${promoLabel} Promo</span>`);
+      } else {
+        lines.push('1 Family License');
+      }
+    }
+    lines.push('110% Price Match Guarantee');
+    lines.push('Annual Fee $299.00');
+    lines.push('Guest Policy');
+    lines.push('Full <span class="g">VIP Benefits</span>/Discounts');
+    lines.push('<span class="g">Unlimited</span> Hotel/Air/Tours');
+    lines.push('Cruises/<span class="g">All-Inclusive</span> (10% cruise rebate - only license owners eligible)');
+    if(marketingChecked){
+      lines.push(`<span class="g">Marketing Funds Credit Applied</span> &minus;$${marketingAmount.toLocaleString('en-US')}`);
+    }
+  }
+  return lines;
+}
+
 function updateClientDisplay(){
   if(!clientWin || clientWin.closed) return;
   const d = clientWin.document;
@@ -544,32 +633,42 @@ function updateClientDisplay(){
     strikeEl.style.display = 'none';
   }
 
-  // Mirror the same visible summary values already computed by calculate()
-  d.getElementById('cd-base-price').textContent = document.getElementById('sum-pkg-price').textContent;
-  d.getElementById('cd-marketing-line').style.display = document.getElementById('sum-marketing-line').style.display;
-  d.getElementById('cd-marketing-val').textContent = document.getElementById('sum-marketing-val').textContent;
-  d.getElementById('cd-weeks-line').style.display = document.getElementById('sum-weeks-line').style.display;
-  d.getElementById('cd-weeks-label').textContent = document.getElementById('sum-weeks-label').textContent;
-  d.getElementById('cd-weeks-val').textContent = document.getElementById('sum-weeks-val').textContent;
-  d.getElementById('cd-family-line').style.display = document.getElementById('sum-family-line').style.display;
-  d.getElementById('cd-family-label').textContent = document.getElementById('sum-family-label').textContent;
-  d.getElementById('cd-family-val').textContent = document.getElementById('sum-family-val').textContent;
-  d.getElementById('cd-adjusted').textContent = document.getElementById('sum-adjusted').textContent;
-  d.getElementById('cd-doc').textContent = document.getElementById('sum-doc').textContent;
-  d.getElementById('cd-total').textContent = document.getElementById('sum-total').textContent;
+  d.getElementById('cd-total').textContent = document.getElementById('sum-adjusted').textContent;
   d.getElementById('cd-renewal').textContent = document.getElementById('sum-renewal').textContent;
+  d.getElementById('cd-grand-total').textContent = fmt(lastAdjustedPackage + DOC_FEE + RENEWAL_FEE);
+
+  const savingsLines = [];
+  if(lastBreakdown.marketing > 0) savingsLines.push(['Marketing Funds Credit', lastBreakdown.marketing]);
+  if(lastBreakdown.weeksCredit > 0) savingsLines.push([`Premium Weeks Removed (${lastBreakdown.weeksCount})`, lastBreakdown.weeksCredit]);
+  if(lastBreakdown.family > 0) savingsLines.push(['Family License Credit', lastBreakdown.family]);
+
+  const toggleBtn = d.getElementById('cd-savings-toggle');
+  const detailsEl = d.getElementById('cd-savings-details');
+  if(savingsLines.length === 0){
+    toggleBtn.style.display = 'none';
+    detailsEl.style.display = 'none';
+    detailsEl.innerHTML = '';
+  } else {
+    toggleBtn.style.display = 'inline-block';
+    detailsEl.innerHTML = savingsLines.map(([label, amt]) =>
+      `<div class="saving-line"><span>${label}</span><span>&minus;${fmt(amt)}</span></div>`
+    ).join('');
+  }
+
+  const lines = buildFeatureLines();
+  d.getElementById('cd-features').innerHTML = lines.map(l => `<li>${l}</li>`).join('');
 }
 
 const ALL_WEEKS_DEFAULT = [
-  { name: "Premium Week 1", value: 1200, included: true },
-  { name: "Premium Week 2", value: 800, included: true },
-  { name: "Premium Week 3", value: 800, included: true },
-  { name: "Premium Week 4", value: 800, included: true },
+  { name: "Premium Week 1", value: 799, included: true },
+  { name: "Premium Week 2", value: 799, included: true },
+  { name: "Premium Week 3", value: 799, included: true },
+  { name: "Premium Week 4", value: 799, included: true },
 ];
 
 const PACKAGES = {
   standard: { label: "Anytime Standard", price: 12995, today: false, hasFamily: false, weeksCount: 1 },
-  platinum: { label: "Platinum package", price: 10995, strikePrice: 12995, today: true, hasFamily: true, weeksCount: 4 }
+  platinum: { label: "Platinum License", price: 10995, strikePrice: 12995, today: true, hasFamily: true, weeksCount: 4 }
 };
 
 let currentPackage = 'standard';
@@ -656,6 +755,9 @@ function getBasePrice(){
 
 const DOC_FEE = 599;
 const RENEWAL_FEE = 299;
+const FAMILY_BASELINE = 4;
+let lastAdjustedPackage = 0;
+let lastBreakdown = { marketing: 0, weeksCredit: 0, weeksCount: 0, family: 0 };
 
 function calculate(){
   const base = getBasePrice();
@@ -670,11 +772,17 @@ function calculate(){
   const weeks = weeksByPackage[currentPackage];
   const removedWeeks = weeks.filter(w => !w.included);
   const weeksCredit = removedWeeks.reduce((sum, w) => sum + w.value, 0);
-  const familyCredit = (PACKAGES[currentPackage].hasFamily && !familyIncluded) ? familyTotalValue : 0;
+  // Price scales directly with the number of passes at whatever value is set.
+  // 1 pass = baseline (no change). Fewer than 1 credits the difference;
+  // more than 1 charges for the extra passes at that same per-pass value.
+  const effectiveFamilyQty = familyIncluded ? familyQty : 0;
+  const familyCredit = PACKAGES[currentPackage].hasFamily ? Math.max(0, FAMILY_BASELINE - effectiveFamilyQty) * familyValue : 0;
   const marketingCredit = (PACKAGES[currentPackage].today && marketingChecked) ? marketingAmount : 0;
 
   const adjustedPackage = base - marketingCredit - weeksCredit - familyCredit;
   const totalDueToday = adjustedPackage + DOC_FEE;
+  lastAdjustedPackage = adjustedPackage;
+  lastBreakdown = { marketing: marketingCredit, weeksCredit: weeksCredit, weeksCount: removedWeeks.length, family: familyCredit };
 
   document.getElementById('sum-pkg-label').textContent = PACKAGES[currentPackage].label;
   document.getElementById('sum-pkg-price').textContent = fmt(base);
@@ -689,8 +797,8 @@ function calculate(){
   document.getElementById('sum-weeks-val').textContent = "\u2212" + fmt(weeksCredit);
 
   const familyLine = document.getElementById('sum-family-line');
-  familyLine.style.display = (PACKAGES[currentPackage].hasFamily && !familyIncluded) ? 'flex' : 'none';
-  document.getElementById('sum-family-label').textContent = `Family licenses removed (${familyQty}x)`;
+  familyLine.style.display = (PACKAGES[currentPackage].hasFamily && familyCredit > 0) ? 'flex' : 'none';
+  document.getElementById('sum-family-label').textContent = 'Family license credit';
   document.getElementById('sum-family-val').textContent = "\u2212" + fmt(familyCredit);
 
   document.getElementById('sum-adjusted').textContent = fmt(adjustedPackage);
@@ -703,6 +811,7 @@ function calculate(){
 
 // init
 document.getElementById('header-logo').src = LOGO_DATA_URI;
+document.getElementById('promo-label').value = new Date().toLocaleString('en-US', { month: 'long' });
 selectPackage('standard');
 </script>
 
